@@ -1,13 +1,21 @@
 #!/usr/bin/env python3
 # -*- coding=utf-8 -*-
 
-import sys, gzip, pprint, re, argparse
+"""
+The script counts the number of SNPs per gene id of VCF files
+depend on GFF3 record.
+"""
+
+__author__      = "Zijie Shen"
+__version__     = "1.0"
+__email__       = "shenzijie2013@163.com"
+__date__        = "2022-05-09"
+
+import gzip, re, argparse
 import numpy as np
 import pandas as pd
 
 GEN_BIN = {
-#     "./.":"?",
-#     ".|.":"?",
     "./.":"0",
     ".|.":"0",
     "0/0":"0",
@@ -25,7 +33,7 @@ def site_location(site: int, start: int, end: int) -> bool:
     return True if start <= site <= end else False
 
 def gentoye2genobin(genotypes):
-    return [GEN_BIN[genotype] for genotype in genotypes]
+    return [GEN_BIN.get(genotype,'0') for genotype in genotypes]
 
 def vcf_info_parse(line):
     vcf_info_list = line.strip().split('\t')
@@ -35,7 +43,7 @@ def vcf_info_parse(line):
     return [chorm ,position, np.array(sample_genotype,dtype='int8')]
 
 def gff_info_parse(line):
-    chrom = 'chr'+ str(line[0]).rjust(2,'0') # gff文件中的染色体标识与vcf文件中不一致，需要考虑比较妥善的处理方式
+    chrom = line[0]
     start = line[3]
     end = line[4]
     geneid = re.match('ID=gene:([0-9A-Za-z]+);',line[8]).group(1)
@@ -43,18 +51,22 @@ def gff_info_parse(line):
 
 
 def main():
-    parser = argparse.ArgumentParser(description='Descriptor for Genome.')
-    parser.add_argument('--gzvcf',  help='The gzvcf file', required=True)
-    parser.add_argument('--gff3',  help='The gff3 file', required=True)
+    parser = argparse.ArgumentParser(description=__doc__,
+                                     formatter_class=argparse.RawDescriptionHelpFormatter)
+    parser.add_argument('--gzvcf',  help='The gzvcf file of individual or population', required=True)
+    parser.add_argument('--gff3',  help='The gff3 file which corresponds to the gzvcf', required=True)
     parser.add_argument('--outfile', help='The output file with csv format', required=True)
     args = parser.parse_args()
     
     gfffile = args.gff3
     vcffile = args.gzvcf
+
+
     meta_info = []
     header_info = []
     descriptor = {}
-    with open(gfffile) as gffs:
+    anchor = False
+    with open(gfffile) as gffs, gzip.open(vcffile, mode='rt') as vcf:
         for gff_records in gffs:
             if not gff_records.startswith("#"):
                 gff_record = gff_records.strip().split('\t')
@@ -62,38 +74,28 @@ def main():
                 if biotype == 'gene':
                     chrom_gff, star, end ,geneid = gff_info_parse(gff_record)
                     descriptor[geneid] = np.array([0])
-                    with gzip.open(vcffile, mode='rt') as vcf:
-                        for line in vcf:
-                            if not line.startswith("#"):
-                                chrom_vcf, position, genotypes = vcf_info_parse(line)
-                                if chrom_vcf == chrom_gff: # 如果变异位置是某个基因中则记录，超过这个基因的结尾则退出当前循环
-                                    if position < star:  
-                                        continue
-                                    elif site_location(position,star,end):
-                                        descriptor[geneid] = descriptor[geneid] + genotypes #利用array的广播机制记录vcf的杂合性
-                                    else:
-                                        break
-                            elif line.startswith("##"):
-                                meta_info.append(line.strip())
+                    if anchor and site_location(position,star,end): 
+                        descriptor[geneid] = descriptor[geneid] + genotypes #利用array的广播机制记录vcf的杂合性
+                        anchor = False
+                    for line in vcf:
+                        if not line.startswith("#"):
+                            chrom_vcf, position, genotypes = vcf_info_parse(line)
+                            if chrom_vcf == chrom_gff:
+                                if position < star:  
+                                    continue
+                                elif site_location(position,star,end):
+                                    descriptor[geneid] = descriptor[geneid] + genotypes #利用array的广播机制记录vcf的杂合性
+                                else:
+                                    anchor=True
+                                    break
                             else:
-                                header_info.append(line.strip().split('\t'))
-    pd.DataFrame(descriptor,index=header_info[9:]).T.to_csv(args.outfile)
+                                anchor=True # 染色体不一致的时候，vcf迭代到下一条染色体，跳出vcf文件的循环后应该进行一次vcf和gff文件的操作，负责将少统计11行成都vcf数据
+                                break
+                        elif line.startswith("##"):
+                            meta_info.append(line.strip())
+                        else:
+                            header_info.append(line.strip())
+    pd.DataFrame(descriptor,index=header_info[0].split('\t')[9:]).to_csv(args.outfile)
 
 if __name__ == "__main__":
     main()
-
-with gzip.open(vcffile, mode='rt') as vcf:
-    for line in vcf:
-        if not line.startswith("#"):
-            chrom_vcf, position, genotypes = vcf_info_parse(line)
-            if chrom_vcf == chrom_gff: # 如果变异位置是某个基因中则记录，超过这个基因的结尾则退出当前循环
-                if position < star:  
-                    continue
-                elif site_location(position,star,end):
-                    descriptor[geneid] = descriptor[geneid] + genotypes #利用array的广播机制记录vcf的杂合性
-                else:
-                    break
-        elif line.startswith("##"):
-            meta_info.append(line.strip())
-        else:
-            header_info.append(line.strip().split('\t'))
