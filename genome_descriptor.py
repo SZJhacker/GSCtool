@@ -2,8 +2,9 @@
 # -*- coding=utf-8 -*-
 
 """
-The script counts the number of SNPs per gene id of VCF files
-depend on GFF3 record.
+The descriptor characterizes the genome. The script counts the number of
+single nucleotide polymorphisms(SNPs) per gene id of VCF files depend on
+GFF3 record.
 """
 
 __author__      = "Zijie Shen"
@@ -35,7 +36,7 @@ def site_location(site: int, start: int, end: int) -> bool:
 
 def gentoye2genobin(genotypes):
     """converted the snps into genotype"""
-    return np.array([GEN_BIN.get(genotype,0) for genotype in genotypes], dtype='int8')
+    return [GEN_BIN.get(genotype,0) for genotype in genotypes]
 
 
 def vcf_info_parse(line):
@@ -43,13 +44,14 @@ def vcf_info_parse(line):
     chorm = vcf_info_list[0]
     position = vcf_info_list[1]
     sample_genotype = gentoye2genobin([varients.split(':')[0] for varients in vcf_info_list[9:]])
-    return [chorm ,position, sample_genotype]
+    return [chorm,position, np.array(sample_genotype,dtype=np.int8)]
 
 def gff_info_parse(line):
     chrom = line[0]
     start = line[3]
     end = line[4]
-    geneid = re.match('ID=gene:([0-9A-Za-z]+);',line[8]).group(1)
+    geneid_pre = re.search('ID=([0-9A-Za-z:]+);',line[8]).group(1)
+    geneid = re.sub('gene:','',geneid_pre,re.I)
     return [chrom, start, end, geneid]    
 
 
@@ -72,8 +74,8 @@ def main():
     with open(gfffile) as gffs, gzip.open(vcffile, mode='rt') as vcf:
         for gff_records in gffs:
             gff_record = gff_records.strip().split('\t')
-            biotype = gff_record[2:3][0] # 获得索引为2的值，越界不报错(注释行可能没有9个元素)
-            if biotype == 'gene': 
+            biotype = gff_record[2:3] # 获得索引为2的值，越界不报错(注释行可能没有9个元素)
+            if biotype and biotype[0] == 'gene': 
                 chrom_gff, star, end ,geneid = gff_info_parse(gff_record)
                 descriptor[geneid] = np.array([0])
                 if anchor and site_location(position,star,end): 
@@ -91,7 +93,7 @@ def main():
                                 anchor=True
                                 break
                         else:
-                            anchor=True # 染色体不一致的时候，vcf迭代到下一条染色体，跳出vcf文件的循环后应该进行一次vcf和gff文件的操作，负责将少统计11行成都vcf数据
+                            anchor=True # 染色体不一致的时候，vcf迭代到下一条染色体，跳出vcf文件的循环后应该进行一次vcf和gff文件的操作
                             break
                     elif line.startswith("##"):
                         meta_info.append(line.strip())
