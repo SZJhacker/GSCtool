@@ -69,4 +69,6 @@ python3 genome_descriptor.py --gzvcf data/homo_individual.vcf.gz --gff3 GFF3/Hom
 ## Cite
 
 Zijie Shen#, Enhui Shen#, Chuyu Ye, Quan Zou* and Longjiang Fan*. SNP Composition of Genes Tool(SCGtool): The first genomic descriptor contributing to the machine learning for genome omics.
+
+
 Please email me if you have any questions:shenzijie2013@163.com
