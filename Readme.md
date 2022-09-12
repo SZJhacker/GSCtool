@@ -46,6 +46,7 @@ optional arguments:
 **note**: The "CHROM" of VCF is consistent with the seqid of gff3, name of the chromosome or scaffold. As shown in Figure2, the context and sort of "CHROM" of VCF (red box of VCF file) is chr01, chr02 .... chrxx, similarly, the seqid of gff3(red box of GFF3) are chr01, chr02 .... chrxx, too.
 
 ![comparison](./img/comparison.jpg)
+
 <center>Figure 2</center>
 
 ## Example
@@ -67,6 +68,6 @@ python3 genome_descriptor.py --gzvcf data/homo_individual.vcf.gz --gff3 GFF3/Hom
 
 ## Cite
 
-Zijie Shen#, Enhui Shen$^#$, Chuyu Ye, Quan Zou* and Longjiang Fan*. Genic SNP Composition Tool Tool(GSCtool): A genomic descriptor characterizes genome in a time-series manner.
+Zijie Shen#, Enhui Shen#, Chuyu Ye, Quan Zou* and Longjiang Fan*. Genic SNP Composition Tool Tool(GSCtool): A genomic descriptor characterizes genome in a time-series manner.
 
 Please email me if you have any questions:shenzijie2013@163.com
