@@ -2,8 +2,8 @@
 # -*- coding=utf-8 -*-
 
 """
-The descriptor characterizes the genome. The script counts the number of
-single nucleotide polymorphisms(SNPs) per gene id of VCF files depend on
+The genic descriptor characterizes the genome in a time-series manner. The script counts the number of
+single nucleotide polymorphisms(SNPs) in per geneid of VCF files depend on
 GFF3 record.
 """
 
