@@ -2,6 +2,7 @@
 # -*- coding=utf-8 -*-
 
 """
+<<<<<<< HEAD
 
 The first genomic descriptor that characterizes genomes 
 in a time-series manner. This tool counts the single 
@@ -9,6 +10,11 @@ nucleotide polymorphisms (SNPs) of genes from a variant
 call format (VCF) file based on a genomic general feature 
 format (GFF3) file.
 
+=======
+The genic descriptor characterizes the genome in a time-series manner. The script counts the number of
+single nucleotide polymorphisms(SNPs) in per geneid of VCF files depend on
+GFF3 record.
+>>>>>>> 44ba19378e3c02ac34a20f49721bbbe8852436e8
 """
 
 __author__      = "Zijie Shen"
