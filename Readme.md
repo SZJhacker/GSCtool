@@ -43,13 +43,12 @@ optional arguments:
 ```
 
 **Note**
-```diff
 
-+ When using our genomic feature extraction tools, please ensure the following to avoid potential errors:
-- Maintain a consistent reference genome: Please ensure that the VCF (Variant Call Format) files of different populations and individuals use the same reference genome for variant detection. This will avoid erroneous results due to different reference genomes.
+`When using our genomic feature extraction tools, please ensure the following to avoid potential errors`:
+- `Maintain a consistent reference genome: Please ensure that the VCF (Variant Call Format) files of different populations and individuals use the same reference genome for variant detection. This will avoid erroneous results due to different reference genomes`.
 
-- Confirm GFF3 file match: When using, please verify that the GFF3 (General Feature Format version 3) file matches the reference genome exactly. If the GFF3 file does not correspond to the reference genome, it may lead to errors or invalid results in the feature extraction process.
-```
+- `Confirm GFF3 file match: When using, please verify that the GFF3 (General Feature Format version 3) file matches the reference genome exactly. If the GFF3 file does not correspond to the reference genome, it may lead to errors or invalid results in the feature extraction process`.
+
 
 ## Example
 
