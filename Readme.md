@@ -42,11 +42,14 @@ optional arguments:
   --outfile OUTFILE  The name of output file with csv format, which records the features of genome
 ```
 
-**Note**: “CHROM” of VCF is consistent with the seqid of GFF3 or the name of the chromosome or scaffold. As shown in Figure 2, “CHROM” of VCF (red box of VCF file) is chr01, chr02 .... chrxx; similarly, the seqid of GFF3 (red box of GFF3) are also chr01, chr02 .... chrxx.
+**Note**
 
-![comparison](./img/comparison.jpg)
+When using our genomic feature extraction tools, please ensure the following to avoid potential errors:
 
-<center>Figure 2</center>
+- Maintain a consistent reference genome: Please ensure that the VCF (Variant Call Format) files of different populations and individuals use the same reference genome for variant detection. This will avoid erroneous results due to different reference genomes.
+
+- Confirm GFF3 file match: When using, please verify that the GFF3 (General Feature Format version 3) file matches the reference genome exactly. If the GFF3 file does not correspond to the reference genome, it may lead to errors or invalid results in the feature extraction process.
+
 
 ## Example
 
@@ -67,6 +70,6 @@ python3 genome_descriptor.py --gzvcf data/homo_individual.vcf.gz --gff3 GFF3/Hom
 
 ## Cite
 
-Zijie Shen#, Enhui Shen#, Qian-Hao Zhu,Longjiang Fan, Quan Zou* and Chuyu Ye*. GSCtool: a descriptor that characterizes genome for applying machine learning in genomics.
+Zijie Shen#, Enhui Shen#, Qianhao Zhu,Longjiang Fan, Quan Zou* and Chuyu Ye*. GSCtool: a descriptor that characterizes genome for applying machine learning in genomics.
 
 Please email me if you have any questions: shenzijie2013@163.com
