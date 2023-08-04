@@ -44,11 +44,10 @@ optional arguments:
 
 **Note**
 
-<span style="color: red;">When using our genomic feature extraction tools, please ensure the following to avoid potential errors:</span>
-- <span style="color: red;">Maintain a consistent reference genome: Please ensure that the VCF (Variant Call Format) files of different populations and individuals use the same reference genome for variant detection. This will avoid erroneous results due to different reference genomes.</span>
+<font style="color: red;">When using our genomic feature extraction tools, please ensure the following to avoid potential errors:</font>
+- <font style="color: red;">Maintain a consistent reference genome: Please ensure that the VCF (Variant Call Format) files of different populations and individuals use the same reference genome for variant detection. This will avoid erroneous results due to different reference genomes.</font>
 
-- <span style="color: red;">Confirm GFF3 file match: When using, please verify that the GFF3 (General Feature Format version 3) file matches the reference genome exactly. If the GFF3 file does not correspond to the reference genome, it may lead to errors or invalid results in the feature extraction process.</span>
-</span>
+- <font style="color: red;">Confirm GFF3 file match: When using, please verify that the GFF3 (General Feature Format version 3) file matches the reference genome exactly. If the GFF3 file does not correspond to the reference genome, it may lead to errors or invalid results in the feature extraction process.</font>
 
 ## Example
 
