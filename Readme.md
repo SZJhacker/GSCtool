@@ -1,4 +1,4 @@
-# Genic SNP Composition Tool (GSCtool): a descriptor that characterizes genome for applying machine learning in genomics
+# GSCtool: a novel descriptor that characterizes genome for applying machine learning in genomics
 
 GSCtool is the first genomic descriptor that characterizes genome for applying machine learning in genomics. GSCtool counts the number of single nucleotide polymorphisms (SNPs) located in a gene region based on genomic general feature format (GFF3) and variant call format (VCF) (Figure 1).
 
