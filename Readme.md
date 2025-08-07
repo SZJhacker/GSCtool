@@ -23,23 +23,37 @@ $$
 
 where $G_i$ represents the SNP frequency ( $Count\left(SNP_{i_0},SNP_{i_1}\ldots SNP_{i_n}\right)$ ) of $Gene_i$, $F$ includes SNP frequency of all genes ( $G_1,G_2\ldots G_n$ ) in the genome.
 
+## ⚙️ Environment Setup
+You can install the necessary Python packages via pip:
 
+```bash
+pip install pandas numpy pysam
+```
+Alternatively, you can use conda:
+
+```bash
+conda install -c bioconda pysam
+conda install pandas numpy
+```
 ## Usage
 
 This script takes as input a VCF file(compressed) and a GFF3 File.
 
 ```bash
 $ python genome_descriptor.py --help
-usage: genome_descriptor.py [-h] --gzvcf GZVCF --gff3 GFF3 --outfile OUTFILE
+usage: python genome_descriptor.py [-h] --gzvcf GZVCF --gff3 GFF3 --outfile OUTFILE
+                           [--batch_size BATCH_SIZE] [--num_processes NUM_PROCESSES]
 
-GSCtool is the first genomic descriptor that characterizes genomesfor applying machine learning in genomics. GSCtool counts the number of single nucleotide polymorphisms (SNPs) located in a gene region based on genomic general feature format (GFF3) and variant call format (VCF).
-
+GSCtool (Parallel Version)
 
 optional arguments:
-  -h, --help         show this help message and exit
-  --gzvcf GZVCF      The gzvcf file of individual or population
-  --gff3 GFF3        The gff3 file which corresponds to the spieces of the gzvcf
-  --outfile OUTFILE  The name of output file with csv format, which records the features of genome
+  -h, --help              Show this help message and exit
+  --gzvcf GZVCF           Input gzipped VCF file (individual or population)
+  --gff3 GFF3             GFF3 annotation file corresponding to the reference genome
+  --outfile OUTFILE       Output CSV file containing genomic features
+  --batch_size BATCH_SIZE Number of genes per processing batch (default: 1000)
+  --num_processes NUM_PROCESSES  Number of parallel processes to use (default: 4)
+
 ```
 
 **Note**
@@ -55,16 +69,29 @@ When using our genomic feature extraction tools, please ensure the following to 
 Extracting features from a population:
 
 ```bash
-python3 genome_descriptor.py --gzvcf data/rice_population.vcf.gz --gff3 GFF3/rice.gff --outfile features/rice_population_features.csv
+python3 genome_descriptor.py \
+  --gzvcf data/rice_population.vcf.gz \
+  --gff3 GFF3/rice.gff \
+  --outfile features/rice_population_features.csv \
+  --batch_size 1000 \
+  --num_processes 8
 ```
 
 Extracting features from individuals
 
 ```bash
-# rice 
-python3 genome_descriptor.py --gzvcf data/rice_individual.vcf.gz --gff3 GFF3/rice.gff --outfile features/rice_individual_features.csv
-# homo sapiens
-python3 genome_descriptor.py --gzvcf data/homo_individual.vcf.gz --gff3 GFF3/Homo_sapiens.GRCh38.106.gff3 --outfile features/homo_individual.csv
+# Rice
+python3 genome_descriptor.py \
+  --gzvcf data/rice_individual.vcf.gz \
+  --gff3 GFF3/rice.gff \
+  --outfile features/rice_individual_features.csv
+
+# Human
+python3 genome_descriptor.py \
+  --gzvcf data/homo_individual.vcf.gz \
+  --gff3 GFF3/Homo_sapiens.GRCh38.106.gff3 \
+  --outfile features/homo_individual.csv
+csv
 ```
 
 ## Cite
