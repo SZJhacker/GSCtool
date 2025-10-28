@@ -110,6 +110,18 @@ def main():
     parser.add_argument('--num_processes', type=int, default=4, help='Number of parallel processes (default: 4)')
     args = parser.parse_args()
 
+    # === 新增部分：检查 VCF 索引文件 ===
+    vcf_file = args.gzvcf
+    tbi_index = vcf_file + ".tbi"
+    csi_index = vcf_file + ".csi"
+
+    if not (os.path.exists(tbi_index) or os.path.exists(csi_index)):
+        print(f"\n[Error] Missing index file for {vcf_file}")
+        print("Please create an index before running this script:")
+        print(f"    tabix -p vcf {vcf_file}\n")
+        sys.exit(1)
+    # === 检查结束 ===
+
     print("Loading samples from VCF...")
     vcf_reader = pysam.VariantFile(args.gzvcf)
     samples = list(vcf_reader.header.samples)
